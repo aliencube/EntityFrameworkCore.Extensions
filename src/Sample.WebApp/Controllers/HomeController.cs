@@ -23,6 +23,23 @@ namespace Sample.WebApp.Controllers
 
         public IActionResult Index()
         {
+            var product = new Product()
+                          {
+                              Name = $"Product-{DateTimeOffset.Now:yyyyMMddHHmmss}",
+                              ProductPrices =
+                              {
+                                  new ProductPrice()
+                                  {
+                                      Value = 100.00M,
+                                      ValidFrom = DateTimeOffset.Now.AddDays(1),
+                                      ValidTo = DateTimeOffset.Now.AddDays(2)
+                                  }
+                              }
+                          };
+
+            this._context.Products.Add(product);
+            this._context.SaveChanges();
+
             return View();
         }
 

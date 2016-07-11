@@ -8,6 +8,14 @@ namespace Sample.Models
     public class Product
     {
         /// <summary>
+        /// Initialises a new instance of the <see cref="Product"/> class.
+        /// </summary>
+        public Product()
+        {
+            this.ProductPrices = new List<ProductPrice>();
+        }
+
+        /// <summary>
         /// Gets or sets the product Id.
         /// </summary>
         public int ProductId { get; set; }
