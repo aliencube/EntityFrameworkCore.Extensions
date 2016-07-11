@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E4B822D4-056C-456F-A33C-C5ABA66ECBFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48199711-B010-4E4D-8D42-FF2B7EE76519}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		apply-version.ps1 = apply-version.ps1
+		appveyor.yml = appveyor.yml
+		build-nuget-package.ps1 = build-nuget-package.ps1
+		build-solution.ps1 = build-solution.ps1
+		EntityFrameworkCore.Extensions.sln.DotSettings = EntityFrameworkCore.Extensions.sln.DotSettings
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+		Settings.StyleCop = Settings.StyleCop
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Aliencube.EntityFrameworkCore.Extensions", "src\Aliencube.EntityFrameworkCore.Extensions\Aliencube.EntityFrameworkCore.Extensions.xproj", "{4A60262A-1DF5-4934-893E-77D59A6D3C89}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{2F07662A-83EB-4F21-9576-8220EE495FD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{20256EED-D7E1-4357-8695-6D6CB953112A}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.Models", "src\Sample.Models\Sample.Models.xproj", "{0755DC8E-DD92-457E-AAB7-396B266AE193}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.WebApp", "src\Sample.WebApp\Sample.WebApp.xproj", "{162D9B28-B025-46B6-BEB5-EF8F8802A142}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A60262A-1DF5-4934-893E-77D59A6D3C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A60262A-1DF5-4934-893E-77D59A6D3C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A60262A-1DF5-4934-893E-77D59A6D3C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A60262A-1DF5-4934-893E-77D59A6D3C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0755DC8E-DD92-457E-AAB7-396B266AE193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0755DC8E-DD92-457E-AAB7-396B266AE193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0755DC8E-DD92-457E-AAB7-396B266AE193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0755DC8E-DD92-457E-AAB7-396B266AE193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{162D9B28-B025-46B6-BEB5-EF8F8802A142}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{162D9B28-B025-46B6-BEB5-EF8F8802A142}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{162D9B28-B025-46B6-BEB5-EF8F8802A142}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{162D9B28-B025-46B6-BEB5-EF8F8802A142}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4A60262A-1DF5-4934-893E-77D59A6D3C89} = {E4B822D4-056C-456F-A33C-C5ABA66ECBFF}
+		{20256EED-D7E1-4357-8695-6D6CB953112A} = {E4B822D4-056C-456F-A33C-C5ABA66ECBFF}
+		{0755DC8E-DD92-457E-AAB7-396B266AE193} = {20256EED-D7E1-4357-8695-6D6CB953112A}
+		{162D9B28-B025-46B6-BEB5-EF8F8802A142} = {20256EED-D7E1-4357-8695-6D6CB953112A}
+	EndGlobalSection
+EndGlobal
