@@ -1,0 +1,71 @@
+# for dev/master branch
+-
+  version: 1.0.0.{build}
+  pull_requests:
+    do_not_increment_build_number: true
+  branches:
+    only:
+    - dev
+    - master
+  skip_tags: true
+  image: Visual Studio 2015
+  configuration: Debug
+  platform: Any CPU
+  build_script:
+  - ps: ./build-solution.ps1 -Configuration $env:configuration
+#  test_script:
+#  - ps: ./run-tests.ps1
+
+# for release/all branch
+-
+  version: 1.0.0.{build}
+  pull_requests:
+    do_not_increment_build_number: true
+  branches:
+    only:
+    - release/all
+  skip_tags: true
+  image: Visual Studio 2015
+  configuration: Release
+  platform: Any CPU
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '{version}'
+    assembly_file_version: '{version}'
+    assembly_informational_version: '{version}'
+  nuget:
+    account_feed: true
+    disable_publish_on_pr: true
+  build_script:
+  - ps: ./build-solution.ps1 -Configuration $env:configuration
+#  test_script:
+#  - ps: ./run-tests.ps1
+  after_test:
+  - ps: .\apply-version.ps1 -Version $env:APPVEYOR_BUILD_VERSION
+  - ps: .\build-nuget-package.ps1
+  artifacts:
+  - path: '**\Aliencube.EntityFrameworkCore.Extensions.*.nupkg'
+    name: Aliencube.EntityFrameworkCore.Extensions
+  deploy:
+  - provider: NuGet
+    api_key: $(nuget_api_key)
+    artifact: Aliencube.EntityFrameworkCore.Extensions
+    skip_symbols: true
+    on:
+      branch: release/all
+      platform: Any CPU
+      configuration: Release
+  - provider: GitHub
+    tag: v$(appveyor_build_version)
+    description: $(project_name)-v$(appveyor_build_version) has been released
+    auth_token: $(github_auth_token)
+    artifact: Aliencube.EntityFrameworkCore.Extensions
+    on:
+      branch: release/all
+      platform: Any CPU
+      configuration: Release
+  after_deploy:
+  - cmd: git config --global credential.helper store
+  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_auth_token):x-oauth-basic@github.com`n"
+  - cmd: git push origin --delete release/all

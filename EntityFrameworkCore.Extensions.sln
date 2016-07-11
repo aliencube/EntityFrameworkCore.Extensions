@@ -7,7 +7,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E4B822D4-056
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48199711-B010-4E4D-8D42-FF2B7EE76519}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		apply-version.ps1 = apply-version.ps1
+		appveyor.yml = appveyor.yml
+		build-nuget-package.ps1 = build-nuget-package.ps1
+		build-solution.ps1 = build-solution.ps1
+		EntityFrameworkCore.Extensions.sln.DotSettings = EntityFrameworkCore.Extensions.sln.DotSettings
 		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+		Settings.StyleCop = Settings.StyleCop
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Aliencube.EntityFrameworkCore.Extensions", "src\Aliencube.EntityFrameworkCore.Extensions\Aliencube.EntityFrameworkCore.Extensions.xproj", "{4A60262A-1DF5-4934-893E-77D59A6D3C89}"
