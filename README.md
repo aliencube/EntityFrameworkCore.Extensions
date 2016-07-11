@@ -1,6 +1,6 @@
 # EntityFrameworkCore.Extensions #
 
-[![Build status](https://ci.appveyor.com/api/projects/status/06bu85cjywdlfa51/branch/dev?svg=true)](https://ci.appveyor.com/project/justinyoo/entity-context-library/branch/dev) [![](https://img.shields.io/nuget/v/Aliencube.EntityContextLibrary.svg)](https://www.nuget.org/packages/Aliencube.EntityContextLibrary/)
+[![Build status](https://ci.appveyor.com/api/projects/status/olv0orpfr42ct77f/branch/dev?svg=true)](https://ci.appveyor.com/project/justinyoo/entityframeworkcore-extensions/branch/dev) [![](https://img.shields.io/nuget/v/Aliencube.EntityFrameworkCore.Extensions.svg)](https://www.nuget.org/packages/Aliencube.EntityFrameworkCore.Extensions/)
 
 **Entity Framework Core Extensions (EFCE)** provides extension methods to help build entities through Entity Framework Core (EF Core).
 
