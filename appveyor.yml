@@ -40,7 +40,7 @@
   build_script:
   - ps: ./build-solution.ps1 -Configuration $env:configuration
   test_script:
-  - ps: ./run-tests.ps1
+  - ps: ./run-tests.ps1 -Configuration $env:configuration
   after_test:
   - ps: .\apply-version.ps1 -Version $env:APPVEYOR_BUILD_VERSION
   - ps: .\build-nuget-package.ps1
