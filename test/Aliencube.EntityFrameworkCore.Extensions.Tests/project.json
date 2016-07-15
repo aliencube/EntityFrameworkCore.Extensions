@@ -1,0 +1,38 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "testRunner": "xunit",
+
+  "frameworks": {
+    "net46": {
+      "dependencies": {
+      }
+    },
+
+    "netcoreapp1.0": {
+      "imports": [
+        "dotnet5.6",
+        "dnxcore50",
+        "portable-net45+win8"
+      ],
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "version": "1.0.0",
+          "type": "platform"
+        }
+      }
+    }
+  },
+
+  "dependencies": {
+    "Aliencube.EntityFrameworkCore.Extensions": "*",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "FluentAssertions": "4.11.0",
+    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.0.0",
+    "Moq": "4.6.25-alpha",
+    "System.Diagnostics.TraceSource": "4.0.0",
+    "xunit": "2.2.0-beta2-build3300",
+    "xunit.runner.visualstudio": "2.2.0-beta2-build1149"
+  }
+}
