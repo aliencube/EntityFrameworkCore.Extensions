@@ -1,6 +1,8 @@
 ﻿using System;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Aliencube.EntityFrameworkCore.Extensions
 {
@@ -30,6 +32,31 @@ namespace Aliencube.EntityFrameworkCore.Extensions
             }
 
             mapper.Map(builder);
+            return builder;
+        }
+
+        /// <summary>
+        /// Sets the default maximum length of string that is affected in the builder.
+        /// </summary>
+        /// <typeparam name="T">The entity type being configured.</typeparam>
+        /// <param name="builder">The builder for the entity type being configured.</param>
+        /// <param name="maxLength">The maximum length of data that is allowed in this property.</param>
+        /// <returns>The builder for the entity type configured.</returns>
+        public static EntityTypeBuilder<T> SetDefaultStringMaxLength<T>(
+            this EntityTypeBuilder<T> builder,
+            int? maxLength)
+            where T : class
+        {
+            builder
+                .Metadata
+                .GetProperties()
+                .Where(p => p.ClrType.Equals(typeof(string))
+                    && p.GetMaxLength().HasValue == false)
+                .ToList()
+                .ForEach(p =>
+                {
+                    p.SetMaxLength(maxLength);
+                });
             return builder;
         }
     }

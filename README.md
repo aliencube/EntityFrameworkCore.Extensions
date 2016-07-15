@@ -10,35 +10,6 @@
 When a database context class inheriting the `DbContext` class is written through EF Core, there are a few ways to setup data types, relations and so on. With **EFCE**, those entity building gets much easier. Here's an example.
 
 ```csharp
-public class Product
-{
-  public Product()
-  {
-      this.ProductPrices = new List<ProductPrice>();
-  }
-
-  public int ProductId { get; set; }
-
-  public string Name { get; set; }
-
-  public List<ProductPrice> ProductPrices { get; set; }
-}
-
-public class ProductPrice
-{
-  public int ProductPriceId { get; set; }
-
-  public int ProductId { get; set; }
-
-  public decimal Value { get; set; }
-
-  public DateTimeOffset ValidFrom { get; set; }
-
-  public DateTimeOffset? ValidTo { get; set; }
-
-  public Product Product { get; set; }
-}
-
 public class ProductDbContext : DbContext
 {
   public ProductDbContext()
@@ -74,78 +45,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 }
 ```
 
-However, if number of entities are increasing, it would be a good idea to separate those entity building logic from the one main method. **EFCE** exactly does the job like:
-
-```csharp
-public static class EntityTypeBuilderExtenions
-{
-  public static EntityTypeBuilder<TEntity> Map<TEntity, TMapper>(this EntityTypeBuilder<TEntity> builder, TMapper mapper)
-    where TEntity : class where TMapper : IEntityMapper<TEntity>
-  {
-    if (builder == null)
-    {
-        throw new ArgumentNullException(nameof(builder));
-    }
-
-    if (mapper == null)
-    {
-        throw new ArgumentNullException(nameof(mapper));
-    }
-
-    mapper.Map(builder);
-    return builder;
-  }
-}
-
-public class ProductMap : IEntityMapper<Product>
-{
-  public void Map(EntityTypeBuilder<Product> builder)
-  {
-    // Primary Key
-    builder.HasKey(p => p.ProductId);
-
-    // Properties
-    builder.Property(p => p.ProductId).IsRequired().UseSqlServerIdentityColumn().ValueGeneratedOnAdd();
-    builder.Property(p => p.Name).IsRequired().HasMaxLength(64);
-
-    // Table & Column Mappings
-    builder.ToTable("Product");
-    builder.Property(p => p.ProductId).HasColumnName("ProductId");
-    builder.Property(p => p.Name).HasColumnName("Name");
-  }
-}
-
-public class ProductPriceMap : IEntityMapper<ProductPrice>
-{
-  public void Map(EntityTypeBuilder<ProductPrice> builder)
-  {
-    // Primary Key
-    builder.HasKey(p => p.ProductPriceId);
-
-    // Properties
-    builder.Property(p => p.ProductPriceId).IsRequired().UseSqlServerIdentityColumn().ValueGeneratedOnAdd();
-    builder.Property(p => p.ProductId).IsRequired();
-    builder.Property(p => p.Value).IsRequired();
-    builder.Property(p => p.ValidFrom).IsRequired();
-    builder.Property(p => p.ValidTo).IsRequired(false);
-
-    // Table & Column Mappings
-    builder.ToTable("ProductPrice");
-    builder.Property(p => p.ProductPriceId).HasColumnName("ProductPriceId");
-    builder.Property(p => p.ProductId).HasColumnName("ProductId");
-    builder.Property(p => p.Value).HasColumnName("Value");
-    builder.Property(p => p.ValidFrom).HasColumnName("ValidFrom");
-    builder.Property(p => p.ValidTo).HasColumnName("ValidTo");
-
-    // Relationships
-    builder.HasOne(p => p.Product)
-           .WithMany(p => p.ProductPrices)
-           .HasForeignKey(p => p.ProductId);
-  }
-}
-```
-
-Hence, the `OnModelCreating` method of the `DbContext` class can be updated like:
+However, if number of entities are increasing, it would be a good idea to separate those entity building logics from the one main method. EF 6.x supports this separation using [`DbModelBuilder.Configurations`](https://msdn.microsoft.com/en-us/library/system.data.entity.dbmodelbuilder.configurations.aspx), but EF Core doesn't support it out-of-the-box. Therefore, with this **EFCE**, we can meet the goal like:
 
 ```csharp
 protected override void OnModelCreating(ModelBuilder builder)
@@ -154,6 +54,7 @@ protected override void OnModelCreating(ModelBuilder builder)
   builder.Entity<ProductPrice>().Map(new ProductPriceMap());
 }
 ```
+
 
 ## Contribution ##
 
