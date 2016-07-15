@@ -2,6 +2,8 @@
 
 using Aliencube.EntityFrameworkCore.Extensions.Tests.Fixtures;
 
+using FluentAssertions;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,29 +15,41 @@ using Xunit;
 
 namespace Aliencube.EntityFrameworkCore.Extensions.Tests
 {
+    /// <summary>
+    /// This represents the test entity for the <see cref="EntityTypeBuilderExtenions"/> class.
+    /// </summary>
     public class EntityTypeBuilderExtenionsTest
     {
-        [Fact]
-        public void Map_has_guardclause1()
+        private readonly EntityTypeBuilder<Foo> _builder;
+        private readonly Mock<FooMapper> _mapper;
+
+        public EntityTypeBuilderExtenionsTest(EntityTypeBuilderExtenionsFixture fixture)
         {
-            Assert.Throws<ArgumentNullException>(
-                () => EntityTypeBuilderExtenions.Map<Foo, FooMapper>(null, null));
+            this._builder = fixture.EntityTypeBuilder;
+            this._mapper = fixture.FooMapper;
         }
 
         [Fact]
-        public void Map_has_guardclause2()
+        public void Given_NullParameter_Map_ShouldThrow_Exception()
+        {
+            Action action = () => { var result = EntityTypeBuilderExtenions.Map<Foo, FooMapper>(null, this._mapper.Object); };
+            action.ShouldThrow<ArgumentNullException>();
+
+            action = () => { var result = EntityTypeBuilderExtenions.Map<Foo, FooMapper>(this._builder, null); };
+            action.ShouldThrow<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Given_NullParameter_Constructor_ShouldThrow_Exception()
         {
             var options = CreateDbContextOptions<FooContext>();
-            var mapperMock = new Mock<FooMapper>();
-            using (var context = new FooContext(options, null))
-            {
-                Assert.Throws<ArgumentNullException>(
-                    () => context.Model.GetAnnotations());
-            }
+
+            Action action = () => { var context = new FooContext(options, null); };
+            action.ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
-        public void Map_should_be_called()
+        public void Given_That_Map_ShouldBe_Called()
         {
             var options = CreateDbContextOptions<FooContext>();
             var mapperMock = new Mock<FooMapper>();
@@ -48,9 +62,9 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
         }
 
         [Fact]
-        public void SetDefaultStringMaxLength_configures_MaxLength()
+        public void Given_That_SetDefaultStringMaxLength_ShouldBe_Set()
         {
-            IEntityType entityType = null;
+            IEntityType entityType;
             var options = CreateDbContextOptions<FooContext>();
             using (var context = new FooContext(options, new FooMapper()))
             {
@@ -60,12 +74,13 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
 
             var fooName = entityType.FindProperty(nameof(Foo.Name));
             var tagName = entityType.FindProperty(nameof(Foo.Tag));
-            Assert.Equal(10, fooName.GetMaxLength().Value);
-            Assert.Equal(10, tagName.GetMaxLength().Value);
+
+            fooName.GetMaxLength().GetValueOrDefault().Should().Be(10);
+            tagName.GetMaxLength().GetValueOrDefault().Should().Be(10);
         }
 
         [Fact]
-        public void SetDefaultStringMaxLength_is_not_affected_for_explicit_MaxLength_configurations()
+        public void Given_That_HasMaxLength_ShouldOverride_DefaultMaxLength()
         {
             IEntityType entityType = null;
             var options = CreateDbContextOptions<FooContext>();
@@ -78,13 +93,13 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
             var fooAlreadyMappedByOthers = entityType.FindProperty(nameof(Foo.AlreadyMappedByOthers));
             var fooAnnotatedString = entityType.FindProperty(nameof(Foo.AnnotatedString));
             var fooFluentApiString = entityType.FindProperty(nameof(Foo.FluentApiString));
-            Assert.Equal(200, fooAlreadyMappedByOthers.GetMaxLength().Value);
-            Assert.Equal(200, fooAnnotatedString.GetMaxLength().Value);
-            Assert.Equal(200, fooFluentApiString.GetMaxLength().Value);
+
+            fooAlreadyMappedByOthers.GetMaxLength().GetValueOrDefault().Should().Be(200);
+            fooAnnotatedString.GetMaxLength().GetValueOrDefault().Should().Be(200);
+            fooFluentApiString.GetMaxLength().GetValueOrDefault().Should().Be(200);
         }
 
-        private static DbContextOptions CreateDbContextOptions<T>()
-             where T : DbContext
+        private static DbContextOptions CreateDbContextOptions<T>() where T : DbContext
         {
             // Create a fresh service provider, and therefore a fresh
             // InMemory database instance.

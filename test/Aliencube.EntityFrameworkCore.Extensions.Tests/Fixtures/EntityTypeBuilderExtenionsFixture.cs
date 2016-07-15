@@ -1,52 +1,45 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Moq;
 
 namespace Aliencube.EntityFrameworkCore.Extensions.Tests.Fixtures
 {
-    public class Foo
+    public class EntityTypeBuilderExtenionsFixture : IDisposable
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Tag { get; set; }
-        public string AlreadyMappedByOthers { get; set; }
+        private bool _disposed;
 
-        [MaxLength(200)]
-        public string AnnotatedString { get; set; }
-
-        public string FluentApiString { get; set; }
-    }
-
-    public class FooMapper : IEntityMapper<Foo>
-    {
-        public virtual void Map(EntityTypeBuilder<Foo> builder)
+        public EntityTypeBuilderExtenionsFixture()
         {
-            builder
-                .Property(p => p.FluentApiString)
-                .HasMaxLength(200);
-        }
-    }
+            var model = new Model();
+            var metadata = new EntityType(typeof(Foo), model, ConfigurationSource.Convention);
+            var modelBuilder = new InternalModelBuilder(model);
+            var builder = new InternalEntityTypeBuilder(metadata, modelBuilder);
 
-    public class FooContext : DbContext
-    {
-        private readonly FooMapper mapper;
+            this.EntityTypeBuilder = new EntityTypeBuilder<Foo>(builder);
 
-        public FooContext(DbContextOptions options, FooMapper mapper)
-            : base(options)
-        {
-            this.mapper = mapper;
+            this.FooMapper = new Mock<FooMapper>();
         }
 
-        public DbSet<Foo> Fooes { get; set; }
+        public EntityTypeBuilder<Foo> EntityTypeBuilder { get; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /// <summary>
+        /// Gets the <see cref="Mock{FooMapper}"/> instance.
+        /// </summary>
+        public Mock<FooMapper> FooMapper { get; }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Foo>().Property(m => m.AlreadyMappedByOthers).HasMaxLength(200);
-            modelBuilder.Entity<Foo>().SetDefaultStringMaxLength(10);
-            modelBuilder.Entity<Foo>().Map(mapper);
+            if (this._disposed)
+            {
+                return;
+            }
+
+            this._disposed = true;
         }
+
     }
 }
