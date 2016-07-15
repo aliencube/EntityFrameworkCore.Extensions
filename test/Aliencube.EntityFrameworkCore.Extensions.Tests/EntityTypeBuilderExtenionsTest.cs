@@ -1,17 +1,19 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Xunit;
-using Moq;
+
+using Aliencube.EntityFrameworkCore.Extensions.Tests.Fixtures;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using Moq.Protected;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.DependencyInjection;
+
+using Moq;
+
+using Xunit;
 
 namespace Aliencube.EntityFrameworkCore.Extensions.Tests
 {
-    public class EntityTypeBuilderExtenionsFixture
+    public class EntityTypeBuilderExtenionsTest
     {
         [Fact]
         public void Map_has_guardclause1()
@@ -84,7 +86,7 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
         private static DbContextOptions CreateDbContextOptions<T>()
              where T : DbContext
         {
-            // Create a fresh service provider, and therefore a fresh 
+            // Create a fresh service provider, and therefore a fresh
             // InMemory database instance.
             var serviceProvider = new ServiceCollection()
                 .AddEntityFrameworkInMemoryDatabase()
@@ -97,47 +99,6 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
                    .UseInternalServiceProvider(serviceProvider);
 
             return builder.Options;
-        }
-    }
-
-    public class Foo
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Tag { get; set; }
-        public string AlreadyMappedByOthers { get; set; }
-        [MaxLength(200)]
-        public string AnnotatedString { get; set; }
-        public string FluentApiString { get; set; }
-    }
-
-    public class FooMapper : IEntityMapper<Foo>
-    {
-        public virtual void Map(EntityTypeBuilder<Foo> builder)
-        {
-            builder
-                .Property(p => p.FluentApiString)
-                .HasMaxLength(200);
-        }
-    }
-
-    public class FooContext : DbContext
-    {
-        private readonly FooMapper mapper;
-        public FooContext(DbContextOptions options, FooMapper mapper)
-            : base(options)
-        {
-            this.mapper = mapper;
-        }
-
-        public DbSet<Foo> Fooes { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Foo>().Property(m => m.AlreadyMappedByOthers).HasMaxLength(200);
-            modelBuilder.Entity<Foo>().SetDefaultStringMaxLength(10);
-            modelBuilder.Entity<Foo>().Map(mapper);
         }
     }
 }
