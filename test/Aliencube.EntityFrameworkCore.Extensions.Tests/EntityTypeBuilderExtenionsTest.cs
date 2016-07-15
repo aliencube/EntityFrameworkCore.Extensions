@@ -18,7 +18,7 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
     /// <summary>
     /// This represents the test entity for the <see cref="EntityTypeBuilderExtenions"/> class.
     /// </summary>
-    public class EntityTypeBuilderExtenionsTest
+    public class EntityTypeBuilderExtenionsTest : IClassFixture<EntityTypeBuilderExtenionsFixture>
     {
         private readonly EntityTypeBuilder<Foo> _builder;
         private readonly Mock<FooMapper> _mapper;
@@ -52,13 +52,12 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
         public void Given_That_Map_ShouldBe_Called()
         {
             var options = CreateDbContextOptions<FooContext>();
-            var mapperMock = new Mock<FooMapper>();
-            using (var context = new FooContext(options, mapperMock.Object))
+            using (var context = new FooContext(options, this._mapper.Object))
             {
                 context.Model.GetAnnotations();
             }
 
-            mapperMock.Verify(m => m.Map(It.IsAny<EntityTypeBuilder<Foo>>()), Times.Once);
+            this._mapper.Verify(m => m.Map(It.IsAny<EntityTypeBuilder<Foo>>()), Times.Once);
         }
 
         [Fact]
@@ -82,7 +81,7 @@ namespace Aliencube.EntityFrameworkCore.Extensions.Tests
         [Fact]
         public void Given_That_HasMaxLength_ShouldOverride_DefaultMaxLength()
         {
-            IEntityType entityType = null;
+            IEntityType entityType;
             var options = CreateDbContextOptions<FooContext>();
             using (var context = new FooContext(options, new FooMapper()))
             {
